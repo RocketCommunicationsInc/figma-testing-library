@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+
+.holster {
+  position: relative;
+  margin-bottom: 1rem;
+}
+.preview {
+  position: absolute;
+  top: 0;
+  /* opacity: 0.5; */
+  z-index: 2;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  border: 2px solid blue;
+}
+.stuff {
+  margin-right: 1rem;
+  border-right: 2px solid blue;
+}
+.ftl-holster {
+  position: relative;
+}
+.hidden {
+  opacity: 0 !important;
+}

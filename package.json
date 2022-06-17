@@ -1,7 +1,7 @@
 {
-  "name": "figma-testing-library",
+  "name": "@rocketmark/figma-testing-library",
   "version": "0.0.1",
-  "description": "Stencil Component Starter",
+  "description": "Web Components for Testing Figma Designs",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "es2015": "dist/esm/index.mjs",

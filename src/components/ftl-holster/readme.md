@@ -44,7 +44,6 @@ Your file ID can be found by inspecting the URL:
 	<my-web-component with-some-props></my-web-component>
 </ftl-holster>
 ```
-
 <!-- Auto Generated Below -->
 
 
