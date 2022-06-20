@@ -12,9 +12,13 @@ export namespace Components {
          */
         "accessToken": string;
         /**
-          * Your Figma file ID. https://www.figma.com/file/<MY FILE ID>/my-file
+          * Your Figma file ID. https://www.figma.com/file/MYFILEID/my-file
          */
         "fileId": string;
+        /**
+          * A unique name for your test to display in the UI.
+         */
+        "name"?: string;
         /**
           * The node ID of the component you want to preview.
          */
@@ -60,9 +64,13 @@ declare namespace LocalJSX {
          */
         "accessToken"?: string;
         /**
-          * Your Figma file ID. https://www.figma.com/file/<MY FILE ID>/my-file
+          * Your Figma file ID. https://www.figma.com/file/MYFILEID/my-file
          */
         "fileId"?: string;
+        /**
+          * A unique name for your test to display in the UI.
+         */
+        "name"?: string;
         /**
           * The node ID of the component you want to preview.
          */

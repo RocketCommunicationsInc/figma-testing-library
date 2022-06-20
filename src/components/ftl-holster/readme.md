@@ -49,11 +49,26 @@ Your file ID can be found by inspecting the URL:
 
 ## Properties
 
-| Property      | Attribute      | Description                                                                                           | Type     | Default     |
-| ------------- | -------------- | ----------------------------------------------------------------------------------------------------- | -------- | ----------- |
-| `accessToken` | `access-token` | Your Figma Personal Access Token. Find it under account settings from the top-left menu inside Figma. | `string` | `undefined` |
-| `fileId`      | `file-id`      | Your Figma file ID. https://www.figma.com/file/<MY FILE ID>/my-file                                   | `string` | `undefined` |
-| `node`        | `node`         | The node ID of the component you want to preview.                                                     | `string` | `undefined` |
+| Property      | Attribute      | Description                                                                                           | Type     | Default       |
+| ------------- | -------------- | ----------------------------------------------------------------------------------------------------- | -------- | ------------- |
+| `accessToken` | `access-token` | Your Figma Personal Access Token. Find it under account settings from the top-left menu inside Figma. | `string` | `undefined`   |
+| `fileId`      | `file-id`      | Your Figma file ID. https://www.figma.com/file/MYFILEID/my-file                                       | `string` | `undefined`   |
+| `name`        | `name`         | A unique name for your test to display in the UI.                                                     | `string` | `'Test Case'` |
+| `node`        | `node`         | The node ID of the component you want to preview.                                                     | `string` | `undefined`   |
+
+
+## Slots
+
+| Slot          | Description                                                               |
+| ------------- | ------------------------------------------------------------------------- |
+| `"(default)"` | The markup for anything you want to test. Maybe a component or a pattern. |
+
+
+## Shadow Parts
+
+| Part      | Description                                  |
+| --------- | -------------------------------------------- |
+| `"image"` | The image returned from Figma, if available. |
 
 
 ----------------------------------------------
