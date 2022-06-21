@@ -26,7 +26,9 @@
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@stencil/core": "^2.13.0"
+    "@stencil/core": "^2.13.0",
+    "html2canvas": "^1.4.1",
+    "pixelmatch": "^5.3.0"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",

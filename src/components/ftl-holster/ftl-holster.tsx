@@ -1,5 +1,7 @@
-import { State, Prop, Component, Host, h } from '@stencil/core';
+import { State, Prop, Element, Component, Host, h } from '@stencil/core';
 import { Client } from '../../utils/client';
+import pixelmatch from 'pixelmatch';
+import html2canvas from 'html2canvas';
 
 /**
  * @slot (default) - The markup for anything you want to test. Maybe a component or a pattern.
@@ -12,9 +14,11 @@ import { Client } from '../../utils/client';
   shadow: true,
 })
 export class FtlHolster {
+  @Element() el!: HTMLElement;
 
   private imgElement?: HTMLImageElement
   private gridElement?: HTMLDivElement
+  @State() diff = 0
   /** 
    * Your Figma Personal Access Token. Find it under account settings from the top-left menu inside Figma.
   */
@@ -44,12 +48,90 @@ export class FtlHolster {
   @State() showGrid = true
   @State() loading = true
 
+  constructor() {
+    this.getDiff = this.getDiff.bind(this)
+  }
+
+  createImage(img: HTMLImageElement) {
+    const canvas = document.createElement('canvas');
+const context = canvas.getContext('2d');
+canvas.width = img.width;
+canvas.height = img.height;
+context.drawImage(img, 0, 0 );
+return context.getImageData(0, 0, img.width, img.height);
+
+  }
+
+  componentDidLoad() {
+    console.log('ok');
+    
+ 
+        
+
+  }
+
+  getSlot() {
+    const slot = this.el?.shadowRoot?.querySelector('slot')
+    if (slot) {
+        const childNodes = slot.assignedNodes({ flatten: true })
+        const children = Array.prototype.filter.call(
+            childNodes,
+            (node) => node.nodeType == Node.ELEMENT_NODE
+        )
+        return children[0]
+    } else {
+        return []
+    }
+  }
+
+  async getDiff() {
+    const img1Src = this.imgElement
+    img1Src.crossOrigin = "Anonymous";
+    // const img1Src = this.el.shadowRoot.querySelector('#figma')
+    // const img2Src = this.el.shadowRoot.querySelector('#code') as HTMLElement
+    const img2Src = this.getSlot()
+
+    const img1 = this.createImage(img1Src as HTMLImageElement)
+    // const img2 = this.createImage(img2Src as HTMLImageElement)
+    const canvasData = await html2canvas(img2Src)
+    const img3 = this.el.shadowRoot.querySelector('#diff') as HTMLCanvasElement
+
+
+    // const img1Ctx = img1.getContext("2d");
+    //     const img2Ctx = img2.getContext("2d");
+    //     const diffCtx = img3.getContext("2d");
+        const { width, height } = img1;
+        //@ts-ignore
+        img3.width = width;
+        //@ts-ignore
+        img3.height = height;
+        // const img1 = img1Ctx.getImageData(0, 0, width, height);
+        const img2 = canvasData.getContext('2d').getImageData(0, 0, width, height);
+        const img3Ctx = img3.getContext("2d");
+        const diff = img3Ctx.createImageData(width, height);
+
+        const diffCount = pixelmatch(
+          img1.data,
+          img2.data,
+          diff.data,
+          width,
+          height,
+          { threshold: 0.6 }
+        );
+        img3Ctx.putImageData(diff, 0, 0);
+        this.diff = diffCount
+        console.log('diff', diffCount);
+  }
   componentWillLoad() {
     const client = new Client(this.accessToken, this.fileId)
     client.getNode(this.node).then((node: string) => {
       this.imageUrl = node
       this.loading = false
     })
+    .catch(e => {
+      console.log(e)
+    })
+    
   }
 
   updateActiveToggle(e: Event) {
@@ -193,6 +275,17 @@ export class FtlHolster {
                   <slot></slot>
               </div>
 
+
+              <div class="diff__container">
+                <div class="image__label">
+                  Diff 
+                </div>
+                <div>Diff Percent: {this.diff}</div>
+
+                  <canvas id="diff"></canvas>
+              </div>
+
+<button onClick={this.getDiff}>get diff</button>
 
             </div>
             <div class="controls-bar">
