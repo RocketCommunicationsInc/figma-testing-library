@@ -6,6 +6,16 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface FtlBelt {
+        /**
+          * Your Figma Personal Access Token. Find it under account settings from the top-left menu inside Figma.
+         */
+        "accessToken": string;
+        /**
+          * Your Figma file ID. https://www.figma.com/file/MYFILEID/my-file
+         */
+        "fileId": string;
+    }
     interface FtlHolster {
         /**
           * Your Figma Personal Access Token. Find it under account settings from the top-left menu inside Figma.
@@ -40,6 +50,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLFtlBeltElement extends Components.FtlBelt, HTMLStencilElement {
+    }
+    var HTMLFtlBeltElement: {
+        prototype: HTMLFtlBeltElement;
+        new (): HTMLFtlBeltElement;
+    };
     interface HTMLFtlHolsterElement extends Components.FtlHolster, HTMLStencilElement {
     }
     var HTMLFtlHolsterElement: {
@@ -53,11 +69,22 @@ declare global {
         new (): HTMLMyComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "ftl-belt": HTMLFtlBeltElement;
         "ftl-holster": HTMLFtlHolsterElement;
         "my-component": HTMLMyComponentElement;
     }
 }
 declare namespace LocalJSX {
+    interface FtlBelt {
+        /**
+          * Your Figma Personal Access Token. Find it under account settings from the top-left menu inside Figma.
+         */
+        "accessToken"?: string;
+        /**
+          * Your Figma file ID. https://www.figma.com/file/MYFILEID/my-file
+         */
+        "fileId"?: string;
+    }
     interface FtlHolster {
         /**
           * Your Figma Personal Access Token. Find it under account settings from the top-left menu inside Figma.
@@ -91,6 +118,7 @@ declare namespace LocalJSX {
         "middle"?: string;
     }
     interface IntrinsicElements {
+        "ftl-belt": FtlBelt;
         "ftl-holster": FtlHolster;
         "my-component": MyComponent;
     }
@@ -99,6 +127,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "ftl-belt": LocalJSX.FtlBelt & JSXBase.HTMLAttributes<HTMLFtlBeltElement>;
             "ftl-holster": LocalJSX.FtlHolster & JSXBase.HTMLAttributes<HTMLFtlHolsterElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }

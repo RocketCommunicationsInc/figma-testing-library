@@ -1,4 +1,4 @@
-import { State, Prop, Component, Host, h } from '@stencil/core';
+import { Watch, State, Prop, Component, Host, h } from '@stencil/core';
 import { Client } from '../../utils/client';
 
 /**
@@ -44,9 +44,20 @@ export class FtlHolster {
   @State() showGrid = true
   @State() loading = true
 
+  @Watch('accessToken')
+  @Watch('fileId')
+  handleParamChanges() {
+    this._fetchImage()
+  }
+
   componentWillLoad() {
+    this._fetchImage()
+  }
+
+  private _fetchImage() {
     const client = new Client(this.accessToken, this.fileId)
     client.getNode(this.node).then((node: string) => {
+
       this.imageUrl = node
       this.loading = false
     })
@@ -55,9 +66,6 @@ export class FtlHolster {
   updateActiveToggle(e: Event) {
     this.activeToggle = (e.target as HTMLInputElement).value
   }
-
-
-  
 
   get figmaLoadingBlock() {
     return (
