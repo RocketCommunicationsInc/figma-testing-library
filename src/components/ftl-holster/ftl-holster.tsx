@@ -55,12 +55,15 @@ export class FtlHolster {
   }
 
   private _fetchImage() {
-    const client = new Client(this.accessToken, this.fileId)
-    client.getNode(this.node).then((node: string) => {
+    if (this.accessToken && this.fileId) {
 
-      this.imageUrl = node
-      this.loading = false
-    })
+      const client = new Client(this.accessToken, this.fileId)
+      client.getNode(this.node).then((node: string) => {
+
+        this.imageUrl = node
+        this.loading = false
+      })
+    }
   }
 
   updateActiveToggle(e: Event) {
@@ -147,7 +150,7 @@ export class FtlHolster {
     )
   }
 
- 
+
 
   /**
    * Prevents issue where Figma returns an image that is longer than the coded component in Overlay mode.
@@ -198,7 +201,7 @@ export class FtlHolster {
                 <div class="image__label">
                   {this.view === 'overlay' ? "Figma and Code" : "Code"}
                 </div>
-                  <slot></slot>
+                <slot></slot>
               </div>
 
 
@@ -229,7 +232,7 @@ export class FtlHolster {
                   class="checkbox__input"
                   id="showGrid"
                   type="checkbox"
-                  checked={this.showGrid} onChange={(e) =>  this.showGrid = (e.target as HTMLInputElement).checked}
+                  checked={this.showGrid} onChange={(e) => this.showGrid = (e.target as HTMLInputElement).checked}
                 />
                 Show Grid
 
