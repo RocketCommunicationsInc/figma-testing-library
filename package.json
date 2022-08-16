@@ -1,6 +1,6 @@
 {
   "name": "@rocketmark/figma-testing-library",
-  "version": "0.2.0-beta.0",
+  "version": "0.2.0",
   "description": "Web Components for Testing Figma Designs",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
