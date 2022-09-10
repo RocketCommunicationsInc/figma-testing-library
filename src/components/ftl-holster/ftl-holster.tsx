@@ -1,5 +1,6 @@
 import { Watch, State, Prop, Component, Host, h } from '@stencil/core';
 import { Client } from '../../utils/client';
+import { viewOptions } from '../ftl-buckle/ftl-buckle';
 
 /**
  * @slot (default) - The markup for anything you want to test. Maybe a component or a pattern.
@@ -37,12 +38,14 @@ export class FtlHolster {
 
 
   @State() imageUrl: string
-  @State() opacity = '1'
-  @State() view = 'toggle'
+  @Prop({mutable: true, reflect: true}) opacity = '1'
+  @Prop({mutable: true, reflect: true}) view: viewOptions = 'toggle'
   @State() mode = 'side'
-  @State() activeToggle = 'figma'
-  @State() showGrid = true
+  @Prop({ mutable: true, reflect: true}) activeToggle = 'figma'
+  @Prop({mutable: true, reflect: true}) showGrid = true
   @State() loading = true
+  @State() error = 'hi'
+  @State() status: 'idle' | 'loading' | 'success' | 'fail' = 'idle'
 
   @Watch('accessToken')
   @Watch('fileId')
@@ -56,12 +59,14 @@ export class FtlHolster {
 
   private _fetchImage() {
     if (this.accessToken && this.fileId) {
-
+      this.status = 'loading'
       const client = new Client(this.accessToken, this.fileId)
       client.getNode(this.node).then((node: string) => {
-
         this.imageUrl = node
-        this.loading = false
+        this.status = 'success'
+      }).catch(e => {
+        console.log(e.message);
+        this.status = 'fail'
       })
     }
   }
@@ -78,45 +83,7 @@ export class FtlHolster {
     )
   }
 
-  get selects() {
-    return (
-      <select name="mode" id="mode" class="select-mode" onChange={(e) => this.view = (e.target as HTMLInputElement).value}>
-        <option value="toggle" selected={this.view === 'toggle'}>Toggle</option>
-        <option value="overlay" selected={this.view === 'overlay'}>Overlay</option>
-        <option value="side-by-side" selected={this.view === 'side-by-side'}>SIde By Side</option>
-      </select>
-    )
-  }
 
-  get control() {
-    return (
-      <ul class="segmented-control">
-        <li class="segmented-control__item">
-          <input
-            class="segmented-control__input"
-            type="radio"
-            value="figma"
-            name="option"
-            id="option-figma"
-            checked={this.activeToggle === 'figma'}
-            onChange={(e) => this.updateActiveToggle(e)}
-          />
-          <label class="segmented-control__label" htmlFor="option-figma">Figma</label>
-        </li>
-        <li class="segmented-control__item">
-          <input class="segmented-control__input"
-            type="radio" value="code" name="option"
-            id="option-code" checked={this.activeToggle === 'code'}
-            onChange={(e) => this.updateActiveToggle(e)}
-          />
-          <label
-            class="segmented-control__label"
-            htmlFor="option-code"
-          >Code</label>
-        </li>
-      </ul>
-    )
-  }
   get loadingSvg() {
     return (
       <svg width="55" height="80" viewBox="0 0 55 80" xmlns="http://www.w3.org/2000/svg" fill="#FFF">
@@ -164,14 +131,20 @@ export class FtlHolster {
     }
   }
 
+  camelize = s => s.replace(/-./g, x=>x[1].toUpperCase())
+
+  updateView(attribute, e) {
+    const formatAttr = this.camelize(attribute)
+    this[formatAttr] = e
+  }
+
   render() {
     return (
       <Host>
         <div class="ftl-holster">
           <header>
-            {this.loading ? (
-              <div>loading...</div>
-            ) : null}
+
+
             <h2>{this.name}</h2>
           </header>
 
@@ -188,13 +161,25 @@ export class FtlHolster {
             >
               <div class="figma__container">
                 <div class="image__label">Figma</div>
-                <img
-                  part="image"
-                  onLoad={() => this.setWidth()}
-                  ref={el => this.imgElement = el as HTMLImageElement}
-                  src={this.imageUrl} style={{
-                    opacity: this.view === 'overlay' ? `${this.opacity}` : '1'
-                  }} alt="" />
+
+                {this.status === 'loading' ? (
+                  this.loadingSvg
+                ) : null}
+                {this.status === 'fail' ? (
+                  <div> it failed</div>
+                ) : null}
+                {this.status === 'success' ? (
+                  <img
+                    part="image"
+                    onLoad={() => this.setWidth()}
+                    ref={el => this.imgElement = el as HTMLImageElement}
+                    src={this.imageUrl} style={{
+                      opacity: this.view === 'overlay' ? `${this.opacity}` : '1'
+                    }} alt="" />
+
+                ) : null}
+
+
               </div>
 
               <div class="code__container">
@@ -206,39 +191,14 @@ export class FtlHolster {
 
 
             </div>
-            <div class="controls-bar">
-              {this.selects}
-              {this.view === 'overlay' ? (
-                <div class="control opacity-control">
-                  <label htmlFor="slider">Opacity:</label>
-                  <input
-                    id="slider"
-                    type="range"
-                    min="0.0"
-                    max="1.0"
-                    step="0.1"
-                    class="opacity-slider"
-                    name="slider"
-                    onChange={(e) => this.opacity = (e.target as HTMLInputElement).value}
-                    value={this.opacity}
-                  />
-                </div>
-              ) : null}
-
-              {this.view === 'toggle' ? this.control : null}
-
-              <label htmlFor="showGrid" class="checkbox checkbox--showGrid">
-                <input
-                  class="checkbox__input"
-                  id="showGrid"
-                  type="checkbox"
-                  checked={this.showGrid} onChange={(e) => this.showGrid = (e.target as HTMLInputElement).checked}
-                />
-                Show Grid
-
-              </label>
-
-            </div>
+            <ftl-buckle
+            active-toggle={this.activeToggle}
+            show-grid={this.showGrid}
+            opacity={this.opacity}
+            view={this.view}
+            onFtl-on-change={(e) => this.updateView(e.detail.attribute, e.detail.value)}
+            ></ftl-buckle>
+            
 
           </div>
         </div>
