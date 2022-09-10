@@ -49,12 +49,16 @@ Your file ID can be found by inspecting the URL:
 
 ## Properties
 
-| Property      | Attribute      | Description                                                                                           | Type     | Default       |
-| ------------- | -------------- | ----------------------------------------------------------------------------------------------------- | -------- | ------------- |
-| `accessToken` | `access-token` | Your Figma Personal Access Token. Find it under account settings from the top-left menu inside Figma. | `string` | `undefined`   |
-| `fileId`      | `file-id`      | Your Figma file ID. https://www.figma.com/file/MYFILEID/my-file                                       | `string` | `undefined`   |
-| `name`        | `name`         | A unique name for your test to display in the UI.                                                     | `string` | `'Test Case'` |
-| `node`        | `node`         | The node ID of the component you want to preview.                                                     | `string` | `undefined`   |
+| Property       | Attribute       | Description                                                                                           | Type                                      | Default       |
+| -------------- | --------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------- | ------------- |
+| `accessToken`  | `access-token`  | Your Figma Personal Access Token. Find it under account settings from the top-left menu inside Figma. | `string`                                  | `undefined`   |
+| `activeToggle` | `active-toggle` |                                                                                                       | `string`                                  | `'figma'`     |
+| `fileId`       | `file-id`       | Your Figma file ID. https://www.figma.com/file/MYFILEID/my-file                                       | `string`                                  | `undefined`   |
+| `name`         | `name`          | A unique name for your test to display in the UI.                                                     | `string`                                  | `'Test Case'` |
+| `node`         | `node`          | The node ID of the component you want to preview.                                                     | `string`                                  | `undefined`   |
+| `opacity`      | `opacity`       |                                                                                                       | `string`                                  | `'1'`         |
+| `showGrid`     | `show-grid`     |                                                                                                       | `boolean`                                 | `true`        |
+| `view`         | `view`          |                                                                                                       | `"overlay" \| "side-by-side" \| "toggle"` | `'toggle'`    |
 
 
 ## Slots
@@ -70,6 +74,19 @@ Your file ID can be found by inspecting the URL:
 | --------- | -------------------------------------------- |
 | `"image"` | The image returned from Figma, if available. |
 
+
+## Dependencies
+
+### Depends on
+
+- [ftl-buckle](../ftl-buckle)
+
+### Graph
+```mermaid
+graph TD;
+  ftl-holster --> ftl-buckle
+  style ftl-holster fill:#f9f,stroke:#333,stroke-width:4px
+```
 
 ----------------------------------------------
 

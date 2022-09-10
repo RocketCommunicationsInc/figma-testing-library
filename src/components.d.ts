@@ -5,6 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { configSettings, viewOptions } from "./components/ftl-buckle/ftl-buckle";
+import { viewOptions as viewOptions1 } from "./components/ftl-buckle/ftl-buckle";
 export namespace Components {
     interface FtlBelt {
         /**
@@ -16,11 +18,19 @@ export namespace Components {
          */
         "fileId": string;
     }
+    interface FtlBuckle {
+        "activeToggle": string;
+        "mode": string;
+        "opacity": string;
+        "showGrid": boolean;
+        "view": viewOptions;
+    }
     interface FtlHolster {
         /**
           * Your Figma Personal Access Token. Find it under account settings from the top-left menu inside Figma.
          */
         "accessToken": string;
+        "activeToggle": string;
         /**
           * Your Figma file ID. https://www.figma.com/file/MYFILEID/my-file
          */
@@ -33,6 +43,9 @@ export namespace Components {
           * The node ID of the component you want to preview.
          */
         "node": string;
+        "opacity": string;
+        "showGrid": boolean;
+        "view": viewOptions1;
     }
     interface MyComponent {
         /**
@@ -49,12 +62,22 @@ export namespace Components {
         "middle": string;
     }
 }
+export interface FtlBuckleCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFtlBuckleElement;
+}
 declare global {
     interface HTMLFtlBeltElement extends Components.FtlBelt, HTMLStencilElement {
     }
     var HTMLFtlBeltElement: {
         prototype: HTMLFtlBeltElement;
         new (): HTMLFtlBeltElement;
+    };
+    interface HTMLFtlBuckleElement extends Components.FtlBuckle, HTMLStencilElement {
+    }
+    var HTMLFtlBuckleElement: {
+        prototype: HTMLFtlBuckleElement;
+        new (): HTMLFtlBuckleElement;
     };
     interface HTMLFtlHolsterElement extends Components.FtlHolster, HTMLStencilElement {
     }
@@ -70,6 +93,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "ftl-belt": HTMLFtlBeltElement;
+        "ftl-buckle": HTMLFtlBuckleElement;
         "ftl-holster": HTMLFtlHolsterElement;
         "my-component": HTMLMyComponentElement;
     }
@@ -85,11 +109,20 @@ declare namespace LocalJSX {
          */
         "fileId"?: string;
     }
+    interface FtlBuckle {
+        "activeToggle"?: string;
+        "mode"?: string;
+        "onFtl-on-change"?: (event: FtlBuckleCustomEvent<configSettings>) => void;
+        "opacity"?: string;
+        "showGrid"?: boolean;
+        "view"?: viewOptions;
+    }
     interface FtlHolster {
         /**
           * Your Figma Personal Access Token. Find it under account settings from the top-left menu inside Figma.
          */
         "accessToken"?: string;
+        "activeToggle"?: string;
         /**
           * Your Figma file ID. https://www.figma.com/file/MYFILEID/my-file
          */
@@ -102,6 +135,9 @@ declare namespace LocalJSX {
           * The node ID of the component you want to preview.
          */
         "node"?: string;
+        "opacity"?: string;
+        "showGrid"?: boolean;
+        "view"?: viewOptions1;
     }
     interface MyComponent {
         /**
@@ -119,6 +155,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "ftl-belt": FtlBelt;
+        "ftl-buckle": FtlBuckle;
         "ftl-holster": FtlHolster;
         "my-component": MyComponent;
     }
@@ -128,6 +165,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "ftl-belt": LocalJSX.FtlBelt & JSXBase.HTMLAttributes<HTMLFtlBeltElement>;
+            "ftl-buckle": LocalJSX.FtlBuckle & JSXBase.HTMLAttributes<HTMLFtlBuckleElement>;
             "ftl-holster": LocalJSX.FtlHolster & JSXBase.HTMLAttributes<HTMLFtlHolsterElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }
